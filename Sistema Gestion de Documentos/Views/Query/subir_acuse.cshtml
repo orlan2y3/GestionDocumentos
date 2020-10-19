@@ -1,0 +1,74 @@
+﻿@{
+    ViewBag.Title = "Subir Acuse";
+    Layout = "~/Views/Shared/Layout.cshtml";
+}
+
+<form action="/Query/Subir_acuse" method="POST" id="form_acuse" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    @foreach (var reg in @ViewBag.datos)
+    {
+        DateTime fecha = new DateTime(@reg.fecha_correspondencia.Year, @reg.fecha_correspondencia.Month, @reg.fecha_correspondencia.Day);
+
+    <div class="row mt-5">
+        <div class="col-12 col-md-2">
+            <label>No. archivo</label>
+            <h5 class="font-weight-bolder text-primary">@reg.numero_correspondencia</h5>
+        </div>
+
+        <div class="col-12 col-md-2">
+            <label>Fecha</label>
+            <h5 class="font-weight-bolder">@fecha.ToString("dd/MM/yyyy")</h5>
+        </div>
+
+        <div class="col-12 col-md-2">
+            <label>No. del documento</label>
+            @if (@reg.numero_remision != null)
+            {
+                <h6 class="font-weight-bold">@reg.numero_remision</h6>
+            }
+        </div>
+
+        <div class="col-12 col-md-3">
+            <label>Remitente</label>
+            @if (@reg.persona != null)
+            {
+                <h6 class="font-weight-bold">@reg.persona</h6>
+            }
+        </div>
+
+        <div class="col-12 col-md-3">
+            <label>Institución</label>
+            @if (@reg.institucion != null)
+            {
+                <h6 class="font-weight-bold">@reg.institucion</h6>
+            }
+        </div>
+
+    </div>
+
+        <div class="row mt-2">
+            <div class="col">
+                <label>Asunto</label>
+                <h6 class="font-weight-bold">@reg.titulo_asunto</h6>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-12 col-md-3 col-lg-4 mt-auto">
+                <label for="acuse_pdf" class="font-weight-bold mark">Adjuntar Acuse .pdf</label>
+                <input type="file" class="form-control-file" accept=".pdf" name="acuse_pdf" id="acuse_pdf" required>
+
+                <button type="submit" class="btn btn-primary mt-2 mb-2" id="btn_acuse">Subir Acuse</button>
+            </div>
+
+            <div class="col-12 col-md-9 col-lg-8 mt-auto text-md-right">
+                <a href="/Query/Consulta" class="btn btn-info">Volver a Consulta</a>
+                <a href="/Home/Index" class="btn btn-success">Nuevo registro</a>
+                <a href="/Home/Salir" class="btn btn-info">Salir del Programa</a>
+            </div>
+
+            <input type="hidden" name="id_registro" id="id_registro" value=@reg.reg_cor_id />
+        </div>
+    }
+
+</form>

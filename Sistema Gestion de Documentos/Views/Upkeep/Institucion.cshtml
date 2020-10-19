@@ -1,0 +1,311 @@
+﻿@{
+    ViewBag.Title = "Mant. Institución";
+    Layout = "~/Views/Shared/Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col">
+        <h2 class="text-primary text-center bg-warning">Mantenimiento de Instituciones</h2>
+    </div>
+</div>
+
+@if (@ViewBag.seleccion != null)
+{
+<form action="/Upkeep/Update_Institucion" method="POST" id="form_institucion" autocomplete="off">
+
+    @Html.AntiForgeryToken()
+
+    <div class="row mt-3">
+
+        <div class="col-12 col-md-5 input-group-sm">
+            <label for="nombre">Nombre de la Institución</label>
+            <input type="text" class="form-control" maxlength="200" name="nombre" id="nombre"
+                   value="@ViewBag.seleccion[0].nombre_institucional" required autofocus />
+        </div>
+
+        <div class="col-12 col-md-2 input-group-sm">
+            <label for="siglas">Siglas</label>
+            @if (@ViewBag.seleccion[0].sigla != "NULL")
+            {
+                <input type="text" class="form-control" maxlength="15" name="siglas" id="siglas" value="@ViewBag.seleccion[0].sigla" />
+            }
+            else
+            {
+                <input type="text" class="form-control" maxlength="15" name="siglas" id="siglas" />
+            }
+        </div>
+
+        <div class="col-12 col-md-5 input-group-sm">
+            <label for="direccion">Dirección</label>
+            @if (@ViewBag.seleccion[0].direccion != "NULL")
+            {
+                <input type="text" class="form-control" maxlength="200" name="direccion" id="direccion" value="@ViewBag.seleccion[0].direccion" />
+            }
+            else
+            {
+                <input type="text" class="form-control" maxlength="200" name="direccion" id="direccion" />
+            }
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-12 col-md-5 input-group-sm">
+            <label for="email">Email</label>
+            @if (@ViewBag.seleccion[0].correo != "NULL")
+            {
+                <input type="text" class="form-control" maxlength="50" name="email" id="email" value="@ViewBag.seleccion[0].correo" />
+            }
+            else
+            {
+                <input type="text" class="form-control" maxlength="50" name="email" id="email" />
+            }
+        </div>
+
+        <div class="col-12 col-md-2 input-group-sm">
+            <label for="telefono">Telefono</label>
+            @if (@ViewBag.seleccion[0].telefono != "NULL")
+            {
+                <input type="text" class="form-control" maxlength="50" value="@ViewBag.seleccion[0].telefono" name="telefono" id="telefono" />
+            }
+            else
+            {
+                <input type="text" class="form-control" maxlength="50" name="telefono" id="telefono" />
+            }
+        </div>
+
+        <div class="col-12 col-md-2 input-group-sm">
+            <label for="fax">Fax</label>
+            @if (@ViewBag.seleccion[0].fax != "NULL")
+            {
+                <input type="text" class="form-control" maxlength="50" name="fax" id="fax" value="@ViewBag.seleccion[0].fax" />
+            }
+            else
+            {
+                <input type="text" class="form-control" maxlength="50" name="fax" id="fax" />
+            }
+        </div>
+
+        <div class="col-12 col-md-3 input-group-sm">
+            <label for="celular">Celular</label>
+            @if (@ViewBag.seleccion[0].movil != "NULL")
+            {
+                <input type="text" class="form-control" maxlength="50" name="celular" id="celular" value="@ViewBag.seleccion[0].movil" />
+            }
+            else
+            {
+                <input type="text" class="form-control" maxlength="50" name="celular" id="celular" />
+            }
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-12 col-md-2 input-group-sm">
+            <button type="submit" class="btn btn-warning btn-sm" id="btn_grabar">
+                Actualizar
+                Institución
+            </button>
+        </div>
+
+        <div class="col-12 col-md-10 input-group-sm">
+            <a href="/Upkeep/institucion" class="btn btn-info btn-sm">Volver a Registro de Instituciones</a>
+        </div>
+
+        @*<div class="col-12 col-md-7 input-group-sm">
+            <a href="/Home/Index" class="btn btn-success btn-sm">Ir a Registro de Documentos</a>
+        </div>*@
+
+        <input type="hidden" name="id_registro" id="id_registro" value=@ViewBag.seleccion[0].cre_id />
+            
+    </div>
+    
+
+</form>
+
+}
+else
+{
+    <form action="/Upkeep/Save_Institucion" method="POST" id="form_institucion" autocomplete="off">
+
+        @Html.AntiForgeryToken()
+
+        <div class="row mt-3">
+            <div class="col-12 col-md-5 input-group-sm">
+                <label for="nombre">Nombre de la institución</label>
+                <input type="text" class="form-control" maxlength="200" name="nombre" id="nombre" required autofocus />
+            </div>
+
+            <div class="col-12 col-md-2 input-group-sm">
+                <label for="siglas">Siglas</label>
+                <input type="text" class="form-control" maxlength="15" name="siglas" id="siglas" />
+            </div>
+
+            <div class="col-12 col-md-5 input-group-sm">
+                <label for="direccion">Dirección</label>
+                <input type="text" class="form-control" maxlength="200" name="direccion" id="direccion" />
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-12 col-md-5 input-group-sm">
+                <label for="email">Email</label>
+                <input type="text" class="form-control" maxlength="50" name="email" id="email" />
+            </div>
+
+            <div class="col-12 col-md-2 input-group-sm">
+                <label for="telefono">Telefono</label>
+                <input type="text" class="form-control" maxlength="50" name="telefono" id="telefono" />
+            </div>
+
+            <div class="col-12 col-md-2 input-group-sm">
+                <label for="fax">Fax</label>
+                <input type="text" class="form-control" maxlength="50" name="fax" id="fax" />
+            </div>
+
+            <div class="col-12 col-md-3 input-group-sm">
+                <label for="celular">Celular</label>
+                <input type="text" class="form-control" maxlength="50" name="celular" id="celular" />
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col input-group-sm">
+                <button type="submit" class="btn btn-primary btn-sm" id="btn_grabar">
+                    Grabar
+                    Institución
+                </button>
+            </div>
+
+            @*<div class="col-12 col-md-10 input-group-sm">
+                <a href="/Home/Index" class="btn btn-success btn-sm">Volver a Registro de Documentos</a>
+            </div>*@
+
+       </div>
+        
+
+    </form>
+}
+
+
+@if (!string.IsNullOrEmpty(@ViewBag.msgInst))
+{
+    int p = @ViewBag.msgInst.IndexOf("Error");
+    <div class="row mt-1">
+        @if (p >= 0)
+        {
+            <div class="col">
+                <h4 class="text-danger text-center">@ViewBag.msgInst</h4>
+            </div>
+        }
+        else
+        {
+            <div class="col">
+                <h4 class="text-success text-center">@ViewBag.msgInst</h4>
+            </div>
+        }
+    </div>
+}
+
+
+@if (@ViewBag.registros != null)
+{
+    <div class="row">
+        <div class="col scrollme">
+            <table class="table table-responsive table-hover table-sm table-striped table-bordered mt-5" style="height: 450px;">
+
+                <thead class="thead-dark">
+                    <tr>
+                        <th class="align-middle">Nombre_de_la_Institución</th>
+                        <th class="align-middle">Siglas</th>
+                        <th class="align-middle">Dirección_Institución</th>
+                        @*<th class="align-middle text-center">Email</th>*@
+                        <th class="align-middle">Telefono_Institución</th>
+                        @*<th class="align-middle text-center">Fax</th>*@
+                        @*<th class="align-middle text-center">Celular_Institución</th>*@
+                        <th class="align-middle text-center">Editar</th>
+                        <th class="align-middle text-center">Eliminar</th>
+                    </tr>
+                </thead>
+
+
+                <tbody>
+                    @foreach (var reg in @ViewBag.registros)
+                    {
+
+                    <tr>
+                        <td class="align-middle">@reg.nombre_institucional</td>
+
+                        @if (@reg.sigla != "NULL")
+                        {
+                            <td class="align-middle">@reg.sigla</td>
+                        }
+                        else
+                        {
+                            <td class="align-middle"></td>
+                        }
+
+                        @if (@reg.direccion != "NULL")
+                        {
+                            <td class="align-middle">@reg.direccion</td>
+                        }
+                        else
+                        {
+                            <td class="align-middle"></td>
+                        }
+
+                        @*@if (@reg.correo != "NULL")
+                        {
+                            <td class="align-middle">@reg.correo</td>
+                        }
+                        else
+                        {
+                            <td class="align-middle"></td>
+                        }*@
+
+                        @if (@reg.telefono != "NULL")
+                        {
+                            <td class="align-middle">@reg.telefono</td>
+                        }
+                        else
+                        {
+                            <td class="align-middle"></td>
+                        }
+
+                        @*@if (@reg.fax != "NULL")
+                        {
+                            <td class="align-middle">@reg.fax</td>
+                        }
+                        else
+                        {
+                            <td class="align-middle"></td>
+                        }*@
+
+                        @*@if (@reg.movil != "NULL")
+                        {
+                            <td class="align-middle">@reg.movil</td>
+                        }
+                        else
+                        {
+                            <td class="align-middle"></td>
+                        }*@
+
+
+
+                        <td class="align-middle text-center"><a href="/Upkeep/Edit_Institucion/@reg.cre_id" class="btn btn-warning btn-sm">Editar</a></td>
+
+                        <td class="align-middle text-center">
+                            <a href="/Upkeep/Delete_Institucion/@reg.cre_id" id="btnEliminar"
+                               class="btn btn-danger btn-delete btn-sm">Eliminar</a>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row mt-3">
+    </div>
+}

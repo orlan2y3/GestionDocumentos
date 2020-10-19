@@ -1,0 +1,209 @@
+﻿@{
+    ViewBag.Title = "Consultas";
+    Layout = "~/Views/Shared/Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col">
+        <h2 class="text-primary text-center bg-warning">Consultar Documentos</h2>
+    </div>
+</div>
+
+<form action="/Query/Consulta" method="POST" id="form_consulta" autocomplete="off">
+    @Html.AntiForgeryToken()
+    <div class="row mt-3">
+        <div class="col-12 col-md-2 input-group-sm">
+            <label for="select_tipo">Seleccione el Tipo</label>
+            <select class="custom-select" name="select_tipo" id="select_tipo">
+                <option selected value="T">Todos</option>
+                <option value="R">Recibida</option>
+                <option value="E">Enviada</option>
+                <option value="I">Interna</option>
+                <option value="D">Documento</option>
+            </select>
+        </div>
+
+        <div class=" col-12 col-md-2 input-group-sm">
+            <label for="fecha_inicial">Fecha Inicial</label>
+            <input type="date" class="form-control" name="fecha_inicial" id="fecha_inicial" />
+        </div>
+
+        <div class="col-12 col-md-2 input-group-sm">
+            <label for="fecha_final">Fecha Final</label>
+            <input type="date" class="form-control" name="fecha_final" id="fecha_final" />
+        </div>
+
+        @*<div class="col-12 col-md-2 mt-2">
+            <button type="submit" class="btn btn-primary" id="btn_consultar">Consultar</button>
+        </div>*@
+
+        <div class="col-12 col-md-2 mt-3">
+            <button type="submit" class="btn btn-block btn-primary" id="btn_consultar">Consultar</button>
+        </div>
+
+        <div class="col-12 col-md-2 mt-3">
+            <a href="/Home/Index" class="btn btn-block btn-success mr-2">Nuevo Registro</a>
+        </div>
+
+        <div class="col-12 col-md-2 mt-3">
+            @if (@ViewBag.registros != null)
+            {
+                <a href="/Home/ReporteComunicaciones" class="btn btn-block btn-primary">Generar Reporte</a>
+            }
+            else
+            {
+                <a href="/Home/ReporteComunicaciones" class="btn btn-block btn-primary disabled">Generar Reporte</a>
+            }
+        </div>
+
+    </div>            
+
+    <div class="row mt-4">
+        <div class="col-12 col-md-4 input-group-sm">
+            <label for="asunto2">Asunto</label>
+            <input type="text" class="form-control" maxlength="200" name="asunto2" id="asunto2">
+        </div>
+
+        <div class="col-12 col-md-4 input-group-sm">
+            <label for="select_departamento2">Departamento</label>
+            <select class="custom-select" name="select_departamento2" id="select_departamento2">
+                <option selected value=""></option>
+                @foreach (var dep in @ViewBag.departamentos)
+                {
+                    <option value=@dep.id> @dep.nombre </option>
+                }
+            </select>
+        </div>
+
+        <div class="col-12 col-md-2 input-group-sm">
+            <label for="no_doc">No. Archivo</label>
+            <input type="text" class="form-control" maxlength="4" name="no_doc" id="no_doc">
+        </div>
+
+        <div class="col-12 col-md-2 input-group-sm mt-3">
+            <a href="/Home/Salir" class="btn btn-info" onclick="return PreguntarSalir()">Salir del Programa</a>
+        </div>
+    </div>
+
+        <div class="row mt-4">
+            <div class="col-12 col-md-6 input-group-sm">
+                <label for="remitente2">Remitente</label>
+                <input type="text" class="form-control" name="remitente2" id="remitente2">
+                <select class="custom-select" name="select_remitente2" id="select_remitente2"></select>
+            </div>
+
+            <div class="col-12 col-md-6 input-group-sm">
+                <label for="institucion2">Institución</label>
+                <input type="text" class="form-control" name="institucion2" id="institucion2">
+                <select class="custom-select" name="select_institucion2" id="select_institucion2"></select>
+            </div>
+        </div>
+
+</form>
+
+@if (!string.IsNullOrEmpty(@ViewBag.msgConsulta))
+{
+    int p = @ViewBag.msgConsulta.IndexOf("Error");
+    <div class="row mt-1">
+        @if (p >= 0)
+        {
+            <div class="col">
+                <h4 class="text-danger text-center">@ViewBag.msgConsulta</h4>
+            </div>
+        }
+        else
+        {
+            <div class="col">
+                <h4 class="text-success text-center">@ViewBag.msgConsulta</h4>
+            </div>
+        }
+    </div>
+}
+
+@if (@ViewBag.registros != null)
+{
+    <div class="row">
+        <div class="col scrollme">
+            <table class="table table-responsive table-hover table-sm table-striped table-bordered mt-5" style="height: 380px;">
+
+                <thead class="thead-dark">
+                    <tr>
+                        <th class="align-middle">Tipo</th>
+                        <th class="align-middle">No. Archivo</th>
+                        <th class="align-middle">No. Doc</th>
+                        <th class="align-middle">Fecha Ingreso</th>
+                        <th class="align-middle">Nombre Remitente</th>
+                        <th class="align-middle">Institución</th>
+                        <th class="align-middle">Asunto</th>
+                        <th class="align-middle text-center">Editar</th>
+                        <th class="align-middle text-center">Anexo</th>
+                        <th class="align-middle text-center">Ver Acuse</th>
+                        <th class="align-middle text-center">Subir Acuse</th>
+                        @if (ViewBag.nivel == "1")
+                        {
+                            <th class="align-middle text-center">Eliminar</th>
+                        }
+                        </tr>
+                </thead>
+
+
+                <tbody>
+                    @foreach (var reg in @ViewBag.registros)
+                    {
+                        DateTime fecha = new DateTime(@reg.fecha_correspondencia.Year, @reg.fecha_correspondencia.Month, @reg.fecha_correspondencia.Day);
+
+                    <tr>
+                        <td class="align-middle">@reg.tipo_correspondencia</td>
+                        <td class="align-middle">@reg.numero_correspondencia</td>
+
+                        <td class="align-middle" width="80">@reg.numero_remision</td>
+                        <td class="align-middle" width="100">@fecha.ToString("dd/MM/yyyy")</td>
+
+                        <td class="align-middle" width="150">@reg.persona</td>
+                        <td class="align-middle">@reg.institucion</td>
+
+                        <td class="align-middle">@reg.titulo_asunto</td>
+
+                        <td class="align-middle text-center"><a href="/Home/Edit/@reg.reg_cor_id" class="btn btn-warning btn-sm">Editar</a></td>
+
+
+                        <td class="align-middle text-center">
+                            @if (@reg.ruta_archivo != null)
+                            {
+                                <a href="~/archivos_pdf/@reg.ruta_archivo" class="btn btn-success btn-sm"
+                                   target="_blank">Ver Pdf</a>
+                            }
+                        </td>
+
+                        <td class="align-middle text-center">
+                            @if (!string.IsNullOrEmpty(@reg.acuse))
+                            {
+                                <a href="~/acuses/@reg.acuse" class="btn btn-primary btn-sm"
+                                   target="_blank">Ver Acuse</a>
+                            }
+                        </td>
+
+                        <td class="align-middle text-center">
+                            <a href="/Query/Subir_acuse/@reg.reg_cor_id" id="btnSubir" class="btn btn-info btn-sm">Subir Acuse</a>
+                        </td>
+
+                        @if (ViewBag.nivel == "1")
+                        {
+                            <td class="align-middle text-center">
+                                <a href="/Home/Delete/@reg.reg_cor_id" id="btnEliminar"
+                                   class="btn btn-danger btn-delete btn-sm">Eliminar</a>
+                            </td>
+                        }
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row mt-3">
+    </div>
+}

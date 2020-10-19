@@ -1,0 +1,49 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sistema de Gestión de Documentos</title>
+    <link rel="stylesheet" type="text/css" href="/Content/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/Content/style.css">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row banner">
+            <div class="col-5 text-right">
+                <img class="logo" src="/images/Logo.png" alt="logo digecoom">
+            </div>
+            <div class="col-7 text-left">
+                <h1>DIGECOOM</h1>
+                <h2>Sistema de Gestión de Documentos</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Todos los derechos reservados.</p>
+        </footer>
+    </div>
+
+
+    <script src="/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="/Scripts/popper.min.js"></script>
+    <script src="/Scripts/bootstrap.min.js"></script>
+    <script src="/Scripts/main.js"></script>
+    <script src="/Scripts/sweetalert.min.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,52 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sistema de Gestión de Documentos</title>
+    <link rel="stylesheet" type="text/css" href="/Content/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/Content/style.css">
+</head>
+
+@*autocomplete="off"*@
+
+<body id="login">
+    <div id="form-signin">
+        <form action="/Home/Login" method="POST" class="form-signin" id="form-login">
+            @Html.AntiForgeryToken()
+            
+            <div class="row">
+                <div class="col text-center">
+                    <img class="logo" src="~/images/logo_digecoom_chico.jpg" alt="logo digecoom">
+                </div>
+            </div>
+
+            <h2 class="form-signin-heading text-center">Iniciar Sesión</h2>
+            <input type="text" class="form-control" name="usuario" id="usuario" placeholder="Digite su usuario" maxlength="25" required autofocus/>
+            <input type="password" class="form-control" name="clave" id="clave" placeholder="Contraseña" maxlength="25" required />
+            @*<label class="checkbox">
+                <input type="checkbox" value="recuerdame" name="recuerdame" id="recuerdame">
+                Recuérdame
+            </label>*@
+            <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+            <div class="row">
+                <div class="col text-right">
+                    <h6>Versión 1.5</h6>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="/Scripts/popper.min.js"></script>
+    <script src="/Scripts/bootstrap.min.js"></script>    
+    <script src="/Scripts/sweetalert.min.js"></script>
+</body>
+
+</html>

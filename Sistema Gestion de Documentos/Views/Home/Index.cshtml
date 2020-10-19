@@ -1,0 +1,611 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/Layout.cshtml";
+}
+
+@if (@ViewBag.seleccion != null)
+{
+    <form action="/Home/Update" method="POST" id="formulario" enctype="multipart/form-data" autocomplete="off">
+        @Html.AntiForgeryToken()
+        <div class="row mt-3 border-bottom border-warning">
+            <div class="col">
+                <h6 class="form-check-inline font-weight-bolder">
+                    Seleccione el Tipo de Documento que Desea Registrar:
+                </h6>
+                <div class="form-check form-check-inline">
+                    @if (@ViewBag.seleccion[0].tipo_correspondencia == "R")
+                    {
+                        <input type="radio" class="form-check-input" name="tipo" value="R" id="recibida" checked>
+                    }
+                    else
+                    {
+                        <input type="radio" class="form-check-input" name="tipo" value="R" id="recibida">
+                    }
+                    <label class="form-check-label mr-3" for="recibida">Recibida</label>
+
+                    @if (@ViewBag.seleccion[0].tipo_correspondencia == "E")
+                    {
+                        <input type="radio" class="form-check-input" name="tipo" value="E" id="enviada" checked>
+                    }
+                    else
+                    {
+                        <input type="radio" class="form-check-input" name="tipo" value="E" id="enviada">
+                    }
+                    <label class="form-check-label mr-3" for="enviada">Enviada</label>
+
+                    @if (@ViewBag.seleccion[0].tipo_correspondencia == "I")
+                    {
+                        <input type="radio" class="form-check-input" name="tipo" value="I" id="interna" checked>
+                    }
+                    else
+                    {
+                        <input type="radio" class="form-check-input" name="tipo" value="I" id="interna">
+                    }
+                    <label class="form-check-label mr-3" for="interna">Interna</label>
+
+                    @if (@ViewBag.seleccion[0].tipo_correspondencia == "D")
+                    {
+                        <input type="radio" class="form-check-input" name="tipo" value="D" id="documento" checked>
+                    }
+                    else
+                    {
+                        <input type="radio" class="form-check-input" name="tipo" value="D" id="documento">
+                    }
+                    <label class="form-check-label" for="documento">Documento</label>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row mt-4">
+            <div class="col-12 col-md-3 input-group-sm">
+                <label for="no_doc">Digite el No. archivo</label>
+                @if (!string.IsNullOrEmpty(@ViewBag.seleccion[0].numero_correspondencia))
+                {
+                    <input type="text" class="form-control" maxlength="4" name="no_doc" id="no_doc" value="@ViewBag.seleccion[0].numero_correspondencia" required />
+                }
+                else
+                {
+                    <input type="text" class="form-control" maxlength="4" name="no_doc" id="no_doc" required autofocus />
+                }
+            </div>
+
+            <div class="col-12 col-md-3 input-group-sm">
+                <label for="no_rem">Digite No. del documento</label>
+                @if (!string.IsNullOrEmpty(@ViewBag.seleccion[0].numero_remision))
+                {
+                    <input type="text" class="form-control" maxlength="50" name="no_rem" value="@ViewBag.seleccion[0].numero_remision" id="no_rem" />
+                }
+                else
+                {
+                    <input type="text" class="form-control" maxlength="50" name="no_rem" id="no_rem" />
+                }
+            </div>
+
+            <div class="col-12 col-md-3 input-group-sm">
+                <label for="remitente">Seleccione el remitente</label>
+                <input type="text" class="form-control" name="remitente" id="remitente" />
+                @if (@ViewBag.seleccion[0].per_id != null)
+                {
+                    <select class="custom-select" name="select_remitente" id="select_remitente">
+                        <option value=@ViewBag.seleccion[0].per_id>@ViewBag.seleccion[0].remitente</option>
+                    </select>
+                }
+                else
+                {
+                    <select class="custom-select" name="select_remitente" id="select_remitente" required></select>
+                }
+            </div>
+
+            <div class="col-12 col-md-3 input-group-sm">
+                <label for="institucion">Seleccione la institución</label>
+                <input type="text" class="form-control" name="institucion" id="institucion" />
+                @if (@ViewBag.seleccion[0].cre_id != null)
+                {
+                    <select class="custom-select" name="select_institucion" id="select_institucion">
+                        <option value=@ViewBag.seleccion[0].cre_id>@ViewBag.seleccion[0].institucion</option>
+                    </select>
+                }
+                else
+                {
+                    <select class="custom-select" name="select_institucion" id="select_institucion" required></select>
+                }
+
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12 col-md-3 input-group-sm">
+                <label for="select_serie">Series</label>
+                <select class="custom-select" name="select_serie" id="select_serie" required>
+                    <option selected value="">SELECCIONE LA SERIE</option>
+                    @foreach (var serie in @ViewBag.series)
+                    {
+                        if (@ViewBag.seleccion[0].codigo_acp_serie == @serie.ser_id)
+                        {
+                            <option value=@serie.ser_id selected> @serie.titulo </option>
+                        }
+                        else
+                        {
+                            <option value=@serie.ser_id> @serie.titulo </option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="col-12 col-md-3 input-group-sm">
+                <label for="select_sub_serie">Sub-Series</label>
+                <select class="custom-select" name="select_sub_serie" id="select_sub_serie">
+                    @if (@ViewBag.seleccion[0].numero_acp_subserie != null)
+                    {
+                        foreach (var subserie in @ViewBag.SubSeries)
+                        {
+                            if (@ViewBag.seleccion[0].numero_acp_subserie == subserie.sub_id)
+                            {
+                                <option value=@subserie.sub_id selected> @subserie.titulo </option>
+                            }
+                            else
+                            {
+                                <option value=@subserie.sub_id> @subserie.titulo </option>
+                            }
+                        }
+                    }
+                </select>
+
+            </div>
+
+            @if (@ViewBag.seleccion[0].fecha_correspondencia != null)
+            {
+                DateTime fecha = new DateTime(@ViewBag.seleccion[0].fecha_correspondencia.Year, @ViewBag.seleccion[0].fecha_correspondencia.Month, @ViewBag.seleccion[0].fecha_correspondencia.Day);
+
+                <div class="col-12 col-md-3 input-group-sm">
+                    <label for="fecha_ing">Fecha de ingreso</label>
+                    <input type="date" class="form-control" value=@fecha.ToString("yyyy-MM-dd") name="fecha_ing" id="fecha_ing" required />
+                </div>
+            }
+            else
+            {
+                <div class="col-12 col-md-3 input-group-sm">
+                    <label for="fecha_ing">Fecha de ingreso</label>
+                    <input type="date" class="form-control" name="fecha_ing" id="fecha_ing" required />
+                </div>
+            }
+
+            <div class="col-12 col-md-3 input-group-sm">
+                <label for="select_departamento">Departamentos</label>
+                <select class="custom-select" name="select_departamento" id="select_departamento" required>
+                    <option selected value="">SELECCIONE EL DEPARTAMENTO</option>
+                    @foreach (var dep in @ViewBag.departamentos)
+                    {
+                        if (@ViewBag.seleccion[0].id_departamento == dep.id)
+                        {
+                            <option value=@dep.id selected> @dep.nombre </option>
+                        }
+                        else
+                        {
+                            <option value=@dep.id> @dep.nombre </option>
+                        }
+
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12 col-md-3">
+                <label for="asunto">Asunto</label>
+                <textarea class="form-control" maxlength="200" name="asunto" id="asunto" rows="3" required>@ViewBag.seleccion[0].titulo_asunto</textarea>
+            </div>
+
+            <div class="col-12 col-md-3">
+                <label for="archivo_pdf">Anexo - Adjuntar archivo .pdf</label>
+                <input type="file" class="form-control-file" accept=".pdf" name="archivo_pdf" id="archivo_pdf">
+
+                <textarea class="form-control mt-3" maxlength="200" rows="1" disabled
+                          style="color:red;">@ViewBag.seleccion[0].ruta_archivo</textarea>
+                <input type="hidden" name="archivo_anterior" id="archivo_anterior" value=@ViewBag.seleccion[0].ruta_archivo />
+            </div>
+
+            <div class="col-12 col-md-6 mt-1">
+                <div class="row">
+                    <div class="col-12 col-md-6 mt-1">
+                        <button type="submit" class="btn btn-block btn-warning grabar btnsize btn-sm" id="btn_grabar">
+                            Actualizar
+                            Registro
+                        </button>
+                    </div>
+
+                        <div class="col-12 col-md-6 mt-1">
+                            <a href="/Home/Index" class="btn btn-block btn-success btnsize btn-sm">Nuevo Registro</a>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 col-md-6 mt-2">
+                            <a href="/Query/Consulta" class="btn btn-block btn-primary btnsize btn-sm">Consultar Documentos</a>
+                        </div>
+
+                        <div class="col-12 col-md-6 mt-2">
+                            <a href="/Home/Salir" class="btn btn-block btn-secondary btnsize btn-sm" onclick="return PreguntarSalir()">Salir del Programa</a>
+                        </div>
+                    </div>
+
+                    @*<button type="button" class="btn btn-block btn-success btnsize btn-sm" data-toggle="modal"
+                data-target="#miModalRemi">
+            Crear Nuevo
+            Remitente
+        </button>
+
+        <button type="button" class="btn btn-block btn-success btnsize btn-sm" data-toggle="modal"
+                data-target="#miModalInst">
+            Crear Nueva
+            Institución
+        </button>*@
+
+                </div>
+
+
+
+                <input type="hidden" name="id_documento" id="id_documento" value=@ViewBag.seleccion[0].reg_cor_id />
+            </div>
+
+    </form>
+
+}
+else
+{
+
+    <form action="/Home/Save" method="POST" id="formulario" enctype="multipart/form-data" autocomplete="off">
+        @Html.AntiForgeryToken()
+        <div class="row mt-3 border-bottom border-warning">
+            <div class="col">
+                <h6 class="form-check-inline font-weight-bolder">
+                    Seleccione el Tipo de Documento que Desea Registrar:
+                </h6>
+                <div class="form-check form-check-inline">
+                    <input type="radio" class="form-check-input" name="tipo" value="R" id="recibida">
+                    <label class="form-check-label mr-3" for="recibida">Recibida</label>
+
+                    <input type="radio" class="form-check-input" name="tipo" value="E" id="enviada">
+                    <label class="form-check-label mr-3" for="enviada">Enviada</label>
+
+                    <input type="radio" class="form-check-input" name="tipo" value="I" id="interna">
+                    <label class="form-check-label mr-3" for="interna">Interna</label>
+
+                    <input type="radio" class="form-check-input" name="tipo" value="D" id="documento">
+                    <label class="form-check-label" for="documento">Documento</label>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row mt-4">
+            <div class="col-12 col-md-3 input-group-sm">
+                <label for="no_doc">Digite el No. archivo</label>
+                <input type="text" class="form-control" maxlength="4" name="no_doc" id="no_doc" required autofocus />
+            </div>
+
+            <div class="col-12 col-md-3 input-group-sm">
+                <label for="no_rem">Digite No. del documento</label>
+                <input type="text" class="form-control" maxlength="50" name="no_rem" id="no_rem" />
+            </div>
+
+            <div class="col-12 col-md-3 input-group-sm">
+                <label for="remitente">Seleccione el remitente</label>
+                <input type="text" class="form-control" name="remitente" id="remitente" />
+                <select class="custom-select" name="select_remitente" id="select_remitente" required></select>
+            </div>
+
+            <div class="col-12 col-md-3 input-group-sm">
+                <label for="institucion">Seleccione la institución</label>
+                <input type="text" class="form-control" name="institucion" id="institucion" />
+                <select class="custom-select" name="select_institucion" id="select_institucion" required></select>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12 col-md-3 input-group-sm">
+                <label for="select_serie">Series</label>
+                <select class="custom-select" name="select_serie" id="select_serie" required>
+                    <option selected value="">SELECCIONE LA SERIE</option>
+                    @foreach (var serie in @ViewBag.series)
+                    {
+                        <option value=@serie.ser_id> @serie.titulo </option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-12 col-md-3 input-group-sm">
+                <label for="select_sub_serie">Sub-Series</label>
+                <select class="custom-select" name="select_sub_serie" id="select_sub_serie"></select>
+            </div>
+
+            <div class="col-12 col-md-3 input-group-sm">
+                <label for="fecha_ing">Fecha de ingreso</label>
+                <input type="date" class="form-control" name="fecha_ing" id="fecha_ing" required />
+            </div>
+
+            <div class="col-12 col-md-3 input-group-sm">
+                <label for="select_departamento">Departamentos</label>
+                <select class="custom-select" name="select_departamento" id="select_departamento" required>
+                    <option selected value="">SELECCIONE EL DEPARTAMENTO</option>
+                    @foreach (var dep in @ViewBag.departamentos)
+                    {
+                        <option value=@dep.id> @dep.nombre </option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12 col-md-3">
+                <label for="asunto">Asunto</label>
+                <textarea class="form-control" maxlength="200" name="asunto" id="asunto" rows="3" required></textarea>
+            </div>
+
+            <div class="col-12 col-md-3">
+                <label for="archivo_pdf">Anexo - Adjuntar archivo .pdf</label>
+                <input type="file" class="form-control-file" accept=".pdf" name="archivo_pdf" id="archivo_pdf">
+            </div>
+
+            <div class="col-12 col-md-2 mt-4">
+                <button type="submit" class="btn btn-block btn-primary grabar btnsize btn-sm" id="btn_grabar">
+                    Grabar
+                    Registro
+                </button>
+            </div>
+
+            <div class="col-12 col-md-2 mt-4">
+                <a href="/Query/Consulta" class="btn btn-block btn-success btnsize btn-sm">Consultar Documentos</a>
+            </div>
+
+            <div class="col-12 col-md-2 mt-4">
+                <a href="/Home/Salir" class="btn btn-block btn-secondary btnsize btn-sm" onclick="return PreguntarSalir()">Salir del Programa</a>
+            </div>
+                    
+
+@*<button type="button" class="btn btn-block btn-success btnsize btn-sm" data-toggle="modal"
+data-target="#miModalRemi">
+Crear Nuevo
+Remitente
+</button>
+
+<button type="button" class="btn btn-block btn-success btnsize btn-sm" data-toggle="modal"
+data-target="#miModalInst">
+Crear Nueva
+Institución
+</button>*@
+
+@*<a href="/Home/Index" class="btn btn-block btn-success btnsize btn-sm">Nuevo Registro</a>*@
+
+
+    </div>
+
+    </form>
+}
+
+
+    <div class="row mt-5">
+        <div class="col-12 col-md-2 input-group-sm">
+            <a href="/Upkeep/Remitente" target="_blank" class="btn btn-block btn-info btnsize btn-sm">Mant. Remitentes</a>
+        </div>
+        <div class="col-12 col-md-2 input-group-sm">
+            <a href="/Upkeep/Institucion" target="_blank" class="btn btn-block btn-info btnsize btn-sm">Mant. Instituciones</a>
+        </div>
+
+        @if (ViewBag.nivel == "1")
+        {
+            <div class="col-12 col-md-2 input-group-sm">
+                <a href="/Upkeep/Departamento" target="_blank" class="btn btn-block btn-info btnsize btn-sm">Mant. Departamentos</a>
+            </div>
+        }
+        else
+        {
+            <div class="col-12 col-md-2 input-group-sm">
+                <a href="/Upkeep/Departamento" target="_blank" class="btn btn-block btn-info btnsize btn-sm disabled">Mant. Departamentos</a>
+            </div>
+        }
+
+        @if (ViewBag.nivel == "1")
+        {
+            <div class="col-12 col-md-2 input-group-sm">
+                <a href="/Upkeep/Serie" target="_blank" class="btn btn-block btn-info btnsize btn-sm">Mant. Series</a>
+            </div>
+        }
+        else
+        {
+            <div class="col-12 col-md-2 input-group-sm">
+                <a href="/Upkeep/Serie" target="_blank" class="btn btn-block btn-info btnsize btn-sm disabled">Mant. Series</a>
+            </div>
+        }
+
+        @if (ViewBag.nivel == "1")
+        {
+            <div class="col-12 col-md-2 input-group-sm">
+                <a href="/Upkeep/Subserie" target="_blank" class="btn btn-block btn-info btnsize btn-sm">Mant. Sub-series</a>
+            </div>
+        }
+        else
+        {
+            <div class="col-12 col-md-2 input-group-sm">
+                <a href="/Upkeep/Subserie" target="_blank" class="btn btn-block btn-info btnsize btn-sm disabled">Mant. Sub-series</a>
+            </div>
+        }
+
+        @if (ViewBag.nivel == "1")
+        {
+            <div class="col-12 col-md-2 input-group-sm">
+                <a href="/Upkeep/Usuario" target="_blank" class="btn btn-block btn-info btnsize btn-sm">Mant. Usuarios</a>
+            </div>
+        }
+        else
+        {
+            <div class="col-12 col-md-2 input-group-sm">
+                <a href="/Upkeep/Usuario" target="_blank" class="btn btn-block btn-info btnsize btn-sm disabled">Mant. Usuarios</a>
+            </div>
+        }
+
+    </div>
+
+
+    @if (!string.IsNullOrEmpty(@ViewBag.msg))
+    {
+        int p = @ViewBag.msg.IndexOf("Error");
+        <div class="row mt-1">
+            @if (p >= 0)
+            {
+                <div class="col">
+                    <h4 class="text-danger text-center">@ViewBag.msg</h4>
+                </div>
+            }
+            else
+            {
+                <div class="col">
+                    <h4 class="text-success text-center">@ViewBag.msg</h4>
+                </div>
+            }
+        </div>
+    }
+
+        <div class="row">            
+            <div class="col scrollme">                
+                <table class="table table-responsive table-hover table-sm table-striped table-bordered mt-4" style="height: 230px;">                                
+                    <thead class="thead-dark">
+                        <tr>
+                            <th class="align-middle">Tipo</th>
+                            <th class="align-middle">No.Archivo</th>
+                            <th class="align-middle">No.Documento</th>
+                            <th class="align-middle">Fecha_Ingreso</th>
+                            <th class="align-middle text-center">Remitente</th>
+                            <th class="align-middle">Institución</th>
+                            <th class="align-middle">Asunto</th>
+                            <th class="align-middle text-center">Editar</th>
+                            @if (ViewBag.nivel == "1")
+                            {
+                                <th class="align-middle text-center">Eliminar</th>
+                            }
+
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var doc in @ViewBag.documentos)
+                        {
+                            DateTime fecha = new DateTime(@doc.fecha_correspondencia.Year, @doc.fecha_correspondencia.Month, @doc.fecha_correspondencia.Day);
+
+                            <tr>
+                                <td class="align-middle">@doc.tipo_correspondencia</td>
+                                <td class="align-middle">@doc.numero_correspondencia</td>
+                                <td class="align-middle">@doc.numero_remision</td>
+                                <td class="align-middle">@fecha.ToString("dd/MM/yyyy")</td>
+                                <td class="align-middle">@doc.persona</td>
+                                <td class="align-middle">@doc.institucion</td>
+                                <td class="align-middle">@doc.titulo_asunto</td>
+                                <td class="align-middle">
+                                    <a href="/Home/Edit/@doc.reg_cor_id" class="btn btn-warning btn-sm">Editar</a>
+                                </td>
+                                @if (ViewBag.nivel == "1")
+                                {
+                                    <td class="align-middle text-center">
+                                        <a href="/Home/Delete/@doc.reg_cor_id" id="btnEliminar"
+                                           class="btn btn-danger btn-delete btn-sm">Eliminar</a>
+                                    </td>
+                                }
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    <!-- Formulario modal Remitente *****************-->
+    <div class="modal fade" id="miModalRemi" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Crear nuevo Remitente</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formulario_remi" autocomplete="off">
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            <label for="remitente_modal">Digite el nombre del remitente</label>
+                            <input type="text" class="form-control" maxlength="50" name="remitente_modal"
+                                   id="remitente_modal" required autofocus />
+                        </div>
+                        <div class="form-group">
+                            <label for="rol_modal">Digite el rol del remitente</label>
+                            <input type="text" class="form-control" maxlength="100" name="rol_modal" id="rol_modal"
+                                   placeholder="Puesto o función" />
+                        </div>
+
+                        <button type="submit" class="btn btn-success mt-4 mr-5" id="btn_grabar_remi">
+                            Grabar
+                            Remitente
+                        </button>
+                        <button type="button" class="btn btn-secondary mt-4" data-dismiss="modal">Cerrar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--************************************-->
+    <!-- Formulario modal Institución *****************-->
+    <div class="modal fade" id="miModalInst" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Crear nueva institución</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formulario_inst">
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            <label for="institucion_modal">Digite el nombre de la institución</label>
+                            <input type="text" class="form-control" maxlength="200" name="institucion_modal"
+                                   id="institucion_modal" required autofocus autocomplete="new-text" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="siglas_modal">Siglas</label>
+                            <input type="text" class="form-control" name="siglas_modal" id="siglas_modal"
+                                   autocomplete="new-text" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dir_modal">Dirección</label>
+                            <input type="text" class="form-control" name="dir_modal" id="dir_modal"
+                                   autocomplete="new-text" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email_modal">Email</label>
+                            <input type="email" class="form-control" name="email_modal" id="email_modal"
+                                   autocomplete="new-text" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tel_modal">Telefono</label>
+                            <input type="text" class="form-control" name="tel_modal" id="tel_modal"
+                                   autocomplete="new-text" />
+                        </div>
+
+                        <button type="submit" class="btn btn-success mt-4 mr-5" id="btn_grabar_inst">
+                            Grabar
+                            Institución
+                        </button>
+                        <button type="button" class="btn btn-secondary mt-4" data-dismiss="modal">Cerrar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--************************************-->

@@ -1,0 +1,190 @@
+﻿@{
+    ViewBag.Title = "Mant. Sub Series";
+    Layout = "~/Views/Shared/Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col">
+        <h2 class="text-primary text-center bg-warning">Mantenimiento Sub-Series</h2>
+    </div>
+</div>
+
+@if (@ViewBag.seleccion != null)
+{
+    <form action="/Upkeep/Update_Subserie" method="POST" id="form_sub_serie" autocomplete="off">
+
+        @Html.AntiForgeryToken()
+
+        <div class="row mt-3">
+
+            <div class="col-12 col-md-5 input-group-sm">
+                <label for="select_serie">Nombre de la Serie</label>                
+                <select class="custom-select" name="select_serie" id="select_serie">
+                    @if (@ViewBag.series != null)
+                    {
+                        <option value=""></option>
+
+                        foreach (var serie in @ViewBag.series)
+                        {
+                            if (@ViewBag.seleccion[0].serie == @serie.ser_id)
+                            {
+                                <option value=@serie.ser_id selected> @serie.titulo </option>
+                            }
+                            else
+                            {
+                                <option value=@serie.ser_id> @serie.titulo </option>
+                            }
+                        }
+                    }                    
+                </select>
+            </div>
+
+            <div class="col-12 col-md-5 input-group-sm">
+                <label for="nombre">Nombre Sub-Serie</label>
+                <input type="text" class="form-control" maxlength="200" name="nombre" id="nombre" value="@ViewBag.seleccion[0].titulo" required autofocus />
+            </div>
+
+            <div class="col-12 col-md-2 input-group-sm">
+                <label for="siglas">Siglas</label>
+                <input type="text" class="form-control" maxlength="50" name="siglas" id="siglas" value="@ViewBag.seleccion[0].sigla" />
+            </div>
+
+        </div>
+
+        <div class="row mt-3">
+
+            <div class="col-12 col-md-2 input-group-sm ">
+                <button type="submit" class="btn btn-warning btn-sm" id="btn_grabar">
+                    Actualizar
+                    Sub-Serie
+                </button>
+            </div>
+
+            <div class="col-12 col-md-10 input-group-sm">
+                <a href="/Upkeep/Subserie" class="btn btn-info btn-sm">Volver a Registro Sub-Series</a>
+            </div>
+
+            @*<div class="col-12 col-md-7 input-group-sm ">
+                <a href="/Home/Index" class="btn btn-success btn-sm">Ir a Registro de Documentos</a>
+            </div>*@
+
+            <input type="hidden" name="id_registro" id="id_registro" value=@ViewBag.seleccion[0].sub_id />
+
+        </div>
+
+    </form>
+
+}
+else
+{
+    <form action="/Upkeep/Save_Subserie" method="POST" id="form_sub_serie" autocomplete="off">
+
+        @Html.AntiForgeryToken()
+
+        <div class="row mt-3">
+            <div class="col-12 col-md-5 input-group-sm">
+                <label for="select_serie">Seleccione la Serie</label>
+                <select class="custom-select" name="select_serie" id="select_serie" required>      
+                    <option value=""></option>
+                    @if(@ViewBag.series != null)
+                    { 
+                        foreach (var serie in @ViewBag.series)
+                        {                            
+                            <option value=@serie.ser_id> @serie.titulo </option>                            
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="col-12 col-md-5 input-group-sm">
+                <label for="nombre">Nombre Sub-Serie</label>
+                <input type="text" class="form-control" maxlength="200" name="nombre" id="nombre" required autofocus />
+            </div>
+
+            <div class="col-12 col-md-2 input-group-sm">
+                <label for="siglas">Siglas</label>
+                <input type="text" class="form-control" maxlength="50" name="siglas" id="siglas" />
+            </div>
+
+        </div>
+
+        <div class="row mt-3">
+            <div class="col input-group-sm">
+                <button type="submit" class="btn btn-primary btn-sm" id="btn_grabar">
+                    Grabar
+                    Sub-Serie
+                </button>
+            </div>
+            @*<div class="col-12 col-md-10 input-group-sm">
+                <a href="/Home/Index" class="btn btn-success btn-sm">Volver a Registro de Documentos</a>
+            </div>*@
+        </div>
+
+    </form>
+}
+
+
+@if (!string.IsNullOrEmpty(@ViewBag.msgSubserie))
+{
+    int p = @ViewBag.msgSubserie.IndexOf("Error");
+    <div class="row mt-1">
+        @if (p >= 0)
+        {
+            <div class="col">
+                <h4 class="text-danger text-center">@ViewBag.msgSubserie</h4>
+            </div>
+        }
+        else
+        {
+            <div class="col">
+                <h4 class="text-success text-center">@ViewBag.msgSubserie</h4>
+            </div>
+        }
+    </div>
+}
+
+
+@if (@ViewBag.registros != null)
+{
+    <div class="row">
+        <div class="col scrollme">
+            <table class="table table-responsive table-hover table-sm table-striped table-bordered mt-5" style="height: 520px;">
+
+                <thead class="thead-dark">
+                    <tr>
+                        <th class="align-middle">Serie</th>
+                        <th class="align-middle">Nombre Sub-Serie</th>
+                        <th class="align-middle">Siglas</th>
+                        <th class="align-middle text-center">Editar</th>
+                        <th class="align-middle text-center">Eliminar</th>
+                    </tr>
+                </thead>
+
+
+                <tbody>
+                    @foreach (var reg in @ViewBag.registros)
+                    {
+
+                    <tr>
+                        <td class="align-middle">@reg.nombre_serie</td>
+                        <td class="align-middle">@reg.titulo</td>
+                        <td class="align-middle">@reg.sigla</td>
+                        <td class="align-middle text-center"><a href="/Upkeep/Edit_Subserie/@reg.sub_id" class="btn btn-warning btn-sm">Editar</a></td>
+
+                        <td class="align-middle text-center">
+                            <a href="/Upkeep/Delete_Subserie/@reg.sub_id" id="btnEliminar"
+                               class="btn btn-danger btn-delete btn-sm">Eliminar</a>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row mt-3">
+    </div>
+}

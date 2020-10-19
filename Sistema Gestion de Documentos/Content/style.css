@@ -1,0 +1,90 @@
+html,
+body {
+  line-height: 0;
+}
+
+* {
+  line-height: 1.15rem;
+}
+
+/* ******************************************************* */
+
+/* Estilos para Inicio de Sesion */
+#login {
+  background: linear-gradient(to right, #0078be, #fab237);
+}
+
+#form-signin {
+  margin-top: 15%;
+}
+
+.form-signin {
+  max-width: 380px;
+  margin: 0 auto;
+  padding: 15px 40px 50px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 4px 4px 16px 1px rgba(0, 0, 0, 0.55);
+}
+
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 30px;
+}
+
+.form-signin input[type="text"],
+.form-signin input[type="password"] {
+  margin-bottom: 20px;
+}
+
+.form-signin .form-control {
+  padding: 10px;
+}
+
+/* Fin de estilos para inicio de seccion */
+
+/* ************************************************ */
+
+/* Estilos para el Layout */
+
+.banner {
+  background: linear-gradient(to right, #0078be, #fab237);
+  color: #ffffff;
+  padding: 10px 0 10px 0;
+  align-items: center;
+}
+
+.banner h1,
+h2 {
+  font-weight: 600;
+}
+
+.logo {
+  height: 120px;
+}
+
+/* Fin de estilos para el Layout */
+
+/* ***************************************************** */
+
+/* Estilos para el Index */
+
+.btnsize {
+  margin-bottom: 10px;
+  margin-right: 10px;
+}
+
+.scrollme {
+  overflow-x: auto !important;
+}
+
+/* Fin de estilos para el Index */
+
+
+@media (min-width: 576px) {}
+
+@media (min-width: 768px) {}
+
+@media (min-width: 992px) {}
+
+@media (min-width: 1200px) {}
